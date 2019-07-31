@@ -28,8 +28,8 @@ withPod {
 
       stage('Build') {
           container('gradle') {
-            sh("chmod +x ./gradle")
-            sh("./gradle build")
+            sh("chmod +x ./gradlew")
+            sh("./gradlew build")
           }
         
         sh("docker build -t ${service} --build-arg JAR_FILE=./build/libs/auth-0.0.1-SNAPSHOT.jar .")
