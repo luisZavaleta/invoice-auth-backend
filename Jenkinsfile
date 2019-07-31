@@ -28,6 +28,7 @@ withPod {
 
       stage('Build') {
           container('gradle') {
+            sh("chmod +x ./gradle")
             sh("./gradle build")
           }
         
