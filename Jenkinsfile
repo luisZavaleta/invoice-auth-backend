@@ -57,7 +57,11 @@ withPod {
         }
       }
 
+      def deploy = load('deploy.groovy')
 
+      stage('Deploy to testenv') {
+        deploy.toKubernetes(service, 'testenv')
+      }
 
      /* def imageToDeploy = "mongo:4.0"
       def deploy = load('deploy.groovy')
