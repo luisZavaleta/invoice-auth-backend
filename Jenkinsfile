@@ -24,16 +24,22 @@ withPod {
 
     container('docker') {
 
-      
+      stage('Test Spring App') {
+          container('gradle') {
+            sh("chmod +x ./gradlew")
+            sh("./gradlew test")
+          }
+      }
 
       stage('Build') {
           container('gradle') {
-            sh("chmod +x ./gradlew")
             sh("./gradlew build")
           }
         
         sh("docker build -t ${service} --build-arg JAR_FILE=./build/libs/auth-0.0.1-SNAPSHOT.jar .")
       }
+
+
 
      /* def imageToDeploy = "mongo:4.0"
       def deploy = load('deploy.groovy')
