@@ -50,6 +50,12 @@ withPod {
         sh("docker rm auth-app-test")
       }
 
+      stage('Publish') {
+        withDockerRegistry(registry: [credentialsId:'dockerhub']){
+          sh("docker tag ${service} ${service}")
+          sh("docker push ${service}")
+        }
+      }
 
 
 
