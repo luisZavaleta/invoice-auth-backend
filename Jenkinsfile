@@ -2,7 +2,7 @@ def withPod(body) {
   podTemplate(label: 'pod', serviceAccount: 'jenkins', containers: [
       containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
       containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', command: 'cat', ttyEnabled: true),
-      containerTemplate(name: 'java', image: 'openjdk:12', command: 'cat', ttyEnabled: true)
+      containerTemplate(name: 'gradle', image: 'gradle:latest', command: 'cat', ttyEnabled: true)
     ],
     volumes: [
       hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
@@ -27,8 +27,8 @@ withPod {
       
 
       stage('Build') {
-          container('java') {
-            sh("./gradlew build")
+          container('gradle') {
+            sh("./gradle build")
           }
         
         sh("docker build -t ${service} --build-arg JAR_FILE=./build/libs/auth-0.0.1-SNAPSHOT.jar .")
