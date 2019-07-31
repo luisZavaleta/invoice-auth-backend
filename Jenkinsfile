@@ -43,8 +43,10 @@ withPod {
 
       stage('Run image') {
         sh("docker ps")
+        sh("docker stop auth-app-test || true")
         sh("docker rm auth-app-test || true")
         sh("docker run -d --name auth-app-test ${service}")
+        sh("docker stop auth-app-test")
         sh("docker rm auth-app-test")
       }
 
