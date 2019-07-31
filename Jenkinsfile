@@ -1,7 +1,7 @@
 def withPod(body) {
   podTemplate(label: 'pod', serviceAccount: 'jenkins', containers: [
       containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
-      containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', command: 'cat', ttyEnabled: true)
+      containerTemplate(name: 'kubectl', image: 'lachlanevenson/k8s-kubectl', command: 'cat', ttyEnabled: true),
       containerTemplate(name: 'java', image: 'openjdk:7', command: 'cat', ttyEnabled: true)
     ],
     volumes: [
