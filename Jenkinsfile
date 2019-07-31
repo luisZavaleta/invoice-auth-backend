@@ -41,6 +41,13 @@ withPod {
 
 
 
+      stage('Run image') {
+        sh("docker run --name auth-app ${service}")
+      }
+
+
+
+
      /* def imageToDeploy = "mongo:4.0"
       def deploy = load('deploy.groovy')
 
