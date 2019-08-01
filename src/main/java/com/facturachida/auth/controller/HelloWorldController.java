@@ -24,6 +24,7 @@ public class HelloWorldController {
 	
 		Company companyA = new Company(5l, "hola", "mundo");
 		Company companyB = new Company(6l, "luis", "zavaleta");
+		Company companyC = new Company(7l, "Adriana", "Monarréz");
 		
 		cr.save(companyA);
 		cr.save(companyB);
