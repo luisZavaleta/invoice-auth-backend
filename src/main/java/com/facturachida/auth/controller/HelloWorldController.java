@@ -28,8 +28,11 @@ public class HelloWorldController {
 		
 		cr.save(companyA);
 		cr.save(companyB);
+		cr.save(companyC);
 		
         return cr.findAll(); 
     }
 
 }
+
+
