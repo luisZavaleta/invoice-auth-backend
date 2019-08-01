@@ -33,10 +33,19 @@ withPod {
 
       stage('Build Image') {
 
-        sh("rm ./build/libs/auth-0.0.1-SNAPSHOT.jar")
+        //sh("rm ./build/libs/auth-0.0.1-SNAPSHOT.jar")
+        sh("ls || true")
+        sh("ls ./build || true")
+        sh("ls ./build/libs || true")
           container('gradle') {
+             sh("ls || true")
+              sh("ls ./build || true")
+              sh("ls ./build/libs || true")
             sh("./gradlew build")
           }
+        sh("ls || true")
+        sh("ls ./build || true")
+        sh("ls ./build/libs || true")
         
         sh("docker build -t ${service} --build-arg JAR_FILE=./build/libs/auth-0.0.1-SNAPSHOT.jar .")
       }
