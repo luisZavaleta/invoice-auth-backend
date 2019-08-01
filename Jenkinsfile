@@ -32,6 +32,8 @@ withPod {
       }
 
       stage('Build Image') {
+
+        sh("rm ./build/libs/auth-0.0.1-SNAPSHOT.jar")
           container('gradle') {
             sh("./gradlew build")
           }
