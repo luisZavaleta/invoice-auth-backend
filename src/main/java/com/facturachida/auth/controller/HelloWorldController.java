@@ -22,9 +22,9 @@ public class HelloWorldController {
 	@RequestMapping("/hello")
     public List<Company> hello() {
 	
-		Company companyA = new Company(5l, "hola", "mundo");
-		Company companyB = new Company(6l, "luis", "zavaleta");
-		Company companyC = new Company(7l, "Adriana", "Monarréz");
+		Company companyA = new Company(5l, "Hola", "Mundo");
+		Company companyB = new Company(6l, "Luis", "Zavaleta");
+		Company companyC = new Company(7l, "Mungus", "Fungus");
 		
 		cr.save(companyA);
 		cr.save(companyB);
