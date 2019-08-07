@@ -14,8 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Company{
 
-	@Id
-	private Long id;
+
 	private  String name;
 	private  String rfc;
 	
