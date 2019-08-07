@@ -33,19 +33,9 @@ withPod {
 
       stage('Build Image') {
 
-        //sh("rm ./build/libs/auth-0.0.1-SNAPSHOT.jar")
-        sh("ls || true")
-        sh("ls ./build || true")
-        sh("ls ./build/libs || true")
           container('gradle') {
-             sh("ls || true")
-              sh("ls ./build || true")
-              sh("ls ./build/libs || true")
             sh("./gradlew build")
           }
-        sh("ls || true")
-        sh("ls ./build || true")
-        sh("ls ./build/libs || true")
         
         sh("docker build -t ${service} --build-arg JAR_FILE=./build/libs/auth-0.0.1-SNAPSHOT.jar .")
       }
@@ -53,7 +43,6 @@ withPod {
 
 
       stage('Run image') {
-        sh("docker ps")
         sh("docker stop auth-app-test || true")
         sh("docker rm auth-app-test || true")
         sh("docker run -d --name auth-app-test ${service}")
