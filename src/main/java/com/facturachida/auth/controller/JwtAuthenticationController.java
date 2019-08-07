@@ -18,6 +18,7 @@ import com.facturachida.auth.service.JwtUserDetailsService;
 import com.facturachida.auth.config.JwtTokenUtil;
 import com.facturachida.auth.data.JwtRequest;
 import com.facturachida.auth.data.JwtResponse;
+import com.facturachida.auth.data.AuthUser;
 
 
 @RestController
@@ -46,6 +47,11 @@ public class JwtAuthenticationController {
 				return ResponseEntity.ok(new JwtResponse(token));
 
 	}	
+
+	@RequestMapping(value = "/register", method = RequestMethod.POST)
+	public ResponseEntity<?> saveUser(@RequestBody AuthUser user) throws Exception {
+		return ResponseEntity.ok(userDetailsService.save(user));
+	}
 
 
 	private void authenticate(String username, String password) throws Exception {

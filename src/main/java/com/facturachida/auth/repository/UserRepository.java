@@ -2,8 +2,8 @@ package com.facturachida.auth.repository;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.facturachida.auth.data.User;
+import com.facturachida.auth.data.AuthUser;
 
-public interface UserRepository  extends MongoRepository<User, Long>{
+public interface UserRepository  extends MongoRepository<AuthUser, Long>{
 
 }
