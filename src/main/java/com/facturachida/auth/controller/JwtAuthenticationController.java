@@ -1,6 +1,8 @@
 package com.facturachida.auth.controller;
 
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,7 +51,7 @@ public class JwtAuthenticationController {
 	}	
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@RequestBody AuthUser user) throws Exception {
+	public ResponseEntity<?> saveUser(@Valid @RequestBody AuthUser user) throws Exception {
 		return ResponseEntity.ok(userDetailsService.save(user));
 	}
 
