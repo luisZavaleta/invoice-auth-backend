@@ -1,3 +1,2 @@
-echo "First arg: $1"
-echo "Second arg: $2"
-echo "Third  arg: $3"
+./gradlew build
+java -jar ./build/libs/auth-0.0.1-SNAPSHOT.jar --spring.profiles.active=local
