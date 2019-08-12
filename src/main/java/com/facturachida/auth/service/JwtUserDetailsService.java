@@ -1,16 +1,17 @@
 package com.facturachida.auth.service;
 
 
+import java.util.ArrayList;
 import java.util.function.Consumer;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+
 import com.facturachida.auth.data.AuthUser;
 import com.facturachida.auth.repository.UserRepository;
 
@@ -48,7 +49,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public AuthUser save(AuthUser user){
 
 		Consumer<AuthUser> userConsumer = u -> u.setPassword(passwordEncoder.encode(u.getPassword()));
-
 
 		userConsumer.accept(user);
 	
