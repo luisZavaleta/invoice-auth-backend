@@ -52,7 +52,13 @@ public class JwtAuthenticationController {
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
 	public ResponseEntity<?> saveUser(@Valid @RequestBody AuthUser user) throws Exception {
-		return ResponseEntity.ok(userDetailsService.save(user));
+		
+		user =  userDetailsService.save(user);
+		user.setPassword("");
+		user.setConfirmPassword("");
+		
+		
+		return ResponseEntity.ok(user);
 	}
 
 

@@ -25,11 +25,13 @@ public class AuthUser{
 	@Email(message="this field shouls be an e-mail")
 	private  String username;
 
+
 	@Field("password")
 	@NotNull
 	@Size(min = 8, message="password whould be at leat 8 characters long")
 	String password;
 
+	
 	@Transient
 	@Field("confirmPassword")
 	String confirmPassword;
