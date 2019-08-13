@@ -6,11 +6,13 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.data.annotation.Transient;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.validation.annotation.Validated;
 
 import com.facturachida.auth.data.validation.annotation.MatchPasswords;
+import com.facturachida.auth.data.validation.annotation.UniqueUsername;
 
 import lombok.Data;
 
@@ -20,8 +22,9 @@ import lombok.Data;
 @MatchPasswords(password="password", confirmPassword="confirmPassword")
 public class AuthUser{
 
+	@UniqueUsername
+	@Indexed(unique = true)
 	@Field("username")
-	@NotNull(message="mail should not be null")
 	@Email(message="this field shouls be an e-mail")
 	private  String username;
 
@@ -44,5 +47,8 @@ public class AuthUser{
 	@Field("lastname")
 	@NotNull
 	private  String lastname;
+	
+	
+	private boolean active;
 	
 }
