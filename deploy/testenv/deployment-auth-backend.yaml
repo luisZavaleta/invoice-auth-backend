@@ -4,7 +4,7 @@ apiVersion: extensions/v1beta1
 metadata:
   name: auth-app
 spec:
-  replicas: 3
+  replicas: 1
   strategy:
    type: RollingUpdate
    rollingUpdate:
