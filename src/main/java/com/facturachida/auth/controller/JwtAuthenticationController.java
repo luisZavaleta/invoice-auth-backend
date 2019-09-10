@@ -21,6 +21,7 @@ import com.facturachida.auth.data.AuthUser;
 import com.facturachida.auth.data.JwtRequest;
 import com.facturachida.auth.data.JwtResponse;
 import com.facturachida.auth.service.JwtUserDetailsService;
+import com.facturachida.auth.utils.SendEmailUtil;
 
 
 @RestController
@@ -56,6 +57,9 @@ public class JwtAuthenticationController {
 		user =  userDetailsService.save(user);
 		user.setPassword("");
 		user.setConfirmPassword("");
+		
+		SendEmailUtil smu = new SendEmailUtil(user);
+		smu.sendMail("luixZavaleta@gmail.com");
 		
 		
 		return ResponseEntity.ok(user);
