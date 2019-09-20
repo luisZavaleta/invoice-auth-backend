@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "mail.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'mail.secret'"
+  },
+  {
+    "name": "mail.secret",
+    "type": "java.lang.String",
+    "description": "A description for 'mail.secret'"
+  }
+]}

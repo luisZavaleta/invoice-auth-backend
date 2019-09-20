@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 import com.facturachida.auth.data.validation.annotation.MatchPasswords;
@@ -16,6 +17,7 @@ import com.facturachida.auth.data.validation.annotation.UniqueUsername;
 
 import lombok.Data;
 
+@Component
 @Data
 @Document
 @Validated
