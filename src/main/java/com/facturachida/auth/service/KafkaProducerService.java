@@ -20,9 +20,9 @@ public class KafkaProducerService {
 	
 	public void sendMessage(String message) {
 		logger.info("PRODUCING Kafka Message  =====> " + message);
-		 ListenableFuture<SendResult<String, String>> future =  kafkaTemplate.send(TOPIC, message);
+		ListenableFuture<SendResult<String, String>> future =  kafkaTemplate.send(TOPIC, message);
 		 
-		 kafkaTemplate.flush();
+		kafkaTemplate.flush();
 		 
 		 
 		 future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {

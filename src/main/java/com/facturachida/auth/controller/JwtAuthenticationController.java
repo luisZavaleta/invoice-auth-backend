@@ -88,7 +88,7 @@ public class JwtAuthenticationController {
 		token  = token.substring(7);
 	
 		
-		return ResponseEntity.ok(jwtTokenUtil.getUsernameFromToken(token));
+		return ResponseEntity.ok(tu.getUsernameFromToken(token));
 	}
 
 

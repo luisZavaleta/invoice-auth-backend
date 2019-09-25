@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class KafkaConsumerService {
 	
 	private static final String TOPIC = "zavaleta";
-	private static final Logger logger = LoggerFactory.getLogger(KafkaProducerService.class);
+	private static final Logger logger = LoggerFactory.getLogger(KafkaConsumerService.class);
 	
 	
 	@KafkaListener(topics=TOPIC, groupId="group_id") 
