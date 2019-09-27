@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -20,10 +19,16 @@ public class SendEmailUtil  implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 8582113458196130542L;
+	
+	//private static final int tokenDuration = 60*60*24*7;
 
 
 	@Autowired
     private JavaMailSender javaMailSender;
+	
+	
+	@Value("${mail.token.duration}")
+    private int tokenDuration;
 	
 	
 	private AuthUser user;
@@ -56,28 +61,26 @@ public class SendEmailUtil  implements Serializable {
 	}
 	
 	
-	public void sendMail(UserDetails userDetails, String email) {
+	public String getMailToken(UserDetails userDetails, String email) {
 		
 	
 		
-		System.out.println("USER USERNAME ===>" +user.getUsername());
+		
+		//SimpleMailMessage mail = new SimpleMailMessage();
+		
+		//mail.setTo(email);
 		
 		
-		SimpleMailMessage mail = new SimpleMailMessage();
+		JwtTokenUtil tokenUtil = new JwtTokenUtil(mailSecret, tokenDuration);
 		
-		mail.setTo(email);
+		String mailToken = tokenUtil.generateToken(userDetails);
 		
+		//mail.setSubject("Plase verify your Email");
 		
-		JwtTokenUtil tu = new JwtTokenUtil(mailSecret, 60*60*24*7);
-		
-		String mailToken = tu.generateToken(userDetails);
-		
-		mail.setSubject("Plase verify your Email");
-		
-		mail.setText("Please folllow this link: \n " + generateConfirmationUrl(mailToken));
+		//mail.setText("Please folllow this link: \n " + generateConfirmationUrl(mailToken));
 		
 		
-		javaMailSender.send(mail);
+		return mailToken;
 		
 		
 		

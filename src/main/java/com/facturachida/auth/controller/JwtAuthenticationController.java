@@ -23,6 +23,7 @@ import com.facturachida.auth.data.AuthUser;
 import com.facturachida.auth.data.JwtRequest;
 import com.facturachida.auth.data.JwtResponse;
 import com.facturachida.auth.service.JwtUserDetailsService;
+import com.facturachida.auth.service.kafka.VerificationMailProducerService;
 import com.facturachida.auth.utils.SendEmailUtil;
 
 
@@ -40,7 +41,10 @@ public class JwtAuthenticationController {
 	private JwtUserDetailsService userDetailsService;	
 	
 	@Autowired
-	SendEmailUtil smu;
+	SendEmailUtil sendMailUtil;
+	
+	@Autowired
+	VerificationMailProducerService  verificationMailProducerService;
 	
 	
 	@Value("${jwt.secret}")
@@ -68,11 +72,15 @@ public class JwtAuthenticationController {
 		user =  userDetailsService.save(user);		
 		
 		
-		smu.setUser(user);
+		sendMailUtil.setUser(user);
 		
 		user.setPassword("");
 		user.setConfirmPassword("");
-		smu.sendMail(userDetailsService.loadUserByUsername(user.getUsername()), "luixZavaleta@gmail.com");
+		
+		verificationMailProducerService.sendMessage(sendMailUtil.getMailToken(userDetailsService.loadUserByUsername(user.getUsername()), "luixZavaleta@gmail.com"));
+		
+		
+		//smu.sendMail(userDetailsService.loadUserByUsername(user.getUsername()), "luixZavaleta@gmail.com");
 		
 		
 		return ResponseEntity.ok(user);

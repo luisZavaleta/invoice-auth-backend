@@ -5,8 +5,18 @@
     "description": "A description for 'mail.secret'"
   },
   {
-    "name": "mail.secret",
+    "name": "mail.token.duration",
+    "type": "java.lang.Integer",
+    "description": "A description for 'mail.token.duration'"
+  },
+  {
+    "name": "mail.server.address",
     "type": "java.lang.String",
-    "description": "A description for 'mail.secret'"
+    "description": "A description for 'mail.server.address'"
+  },
+  {
+    "name": "mail.token.topic",
+    "type": "java.lang.String",
+    "description": "A description for 'mail.token.topic'"
   }
 ]}
