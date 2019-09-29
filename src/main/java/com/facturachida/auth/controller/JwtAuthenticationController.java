@@ -47,8 +47,11 @@ public class JwtAuthenticationController {
 	VerificationMailProducerService  verificationMailProducerService;
 	
 	
-	@Value("${jwt.secret}")
-	private String mailSecret;
+	@Value("${mail.secret}")
+	String mailSecret;
+	
+	@Value("${mail.token.duration}")
+	Integer tokenDuration;
 	
 
 
@@ -72,15 +75,13 @@ public class JwtAuthenticationController {
 		user =  userDetailsService.save(user);		
 		
 		
-		sendMailUtil.setUser(user);
+		//sendMailUtil.setUser(user);
 		
 		user.setPassword("");
 		user.setConfirmPassword("");
 		
-		verificationMailProducerService.sendMessage(sendMailUtil.getMailToken(userDetailsService.loadUserByUsername(user.getUsername()), "luixZavaleta@gmail.com"));
+		verificationMailProducerService.sendMessage(sendMailUtil.getMailToken(userDetailsService.loadUserByUsername(user.getUsername())));
 		
-		
-		//smu.sendMail(userDetailsService.loadUserByUsername(user.getUsername()), "luixZavaleta@gmail.com");
 		
 		
 		return ResponseEntity.ok(user);
@@ -91,7 +92,7 @@ public class JwtAuthenticationController {
 	public ResponseEntity<?> validateMail(@RequestParam String token) throws Exception {
 		
 		
-		JwtTokenUtil tu = new JwtTokenUtil(mailSecret, 60*60*24*7);
+		JwtTokenUtil tu = new JwtTokenUtil(mailSecret, tokenDuration);
 		
 		token  = token.substring(7);
 	

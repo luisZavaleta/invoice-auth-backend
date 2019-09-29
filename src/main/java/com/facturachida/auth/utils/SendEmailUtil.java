@@ -2,14 +2,18 @@ package com.facturachida.auth.utils;
 
 import java.io.Serializable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.facturachida.auth.config.JwtTokenUtil;
 import com.facturachida.auth.data.AuthUser;
+import com.facturachida.auth.service.kafka.VerificationMailConsumerService;
 
 
 @Component
@@ -31,10 +35,10 @@ public class SendEmailUtil  implements Serializable {
     private int tokenDuration;
 	
 	
-	private AuthUser user;
+	//private AuthUser user;
 	
 	
-	@Value("${jwt.secret}")
+	@Value("${mail.secret}")
 	private String mailSecret;
 	
 	@Value("${mail.server.address}")
@@ -42,50 +46,71 @@ public class SendEmailUtil  implements Serializable {
 
 	@Value("${server.port:8080}")
     private String serverPort;
+	
+	@Value("${mail.test_recipient}")
+    private String mailTestRecipient;
+	
+	@Value("${mail.test.activated}")
+    private Boolean mailTestActive;
+	
+	private static final Logger logger = LoggerFactory.getLogger(VerificationMailConsumerService.class);
     
-    public void setUser(AuthUser user) {
-    	this.user = user;
-    }
-	
-	
-	
-	public SendEmailUtil(AuthUser user, String mailSecret, String serverAddress,String serverPort ) {
-		this.user = user;
-		this.mailSecret = mailSecret;
-		this.serverAddress = serverAddress;
-		this.serverPort = serverPort;
-	}
+ 
+
 	
 	public SendEmailUtil() {
 		
 	}
 	
 	
-	public String getMailToken(UserDetails userDetails, String email) {
-		
+
 	
-		
-		
-		//SimpleMailMessage mail = new SimpleMailMessage();
-		
-		//mail.setTo(email);
+	public String getMailToken(UserDetails userDetails) {
 		
 		
 		JwtTokenUtil tokenUtil = new JwtTokenUtil(mailSecret, tokenDuration);
 		
 		String mailToken = tokenUtil.generateToken(userDetails);
 		
-		//mail.setSubject("Plase verify your Email");
-		
-		//mail.setText("Please folllow this link: \n " + generateConfirmationUrl(mailToken));
-		
-		
 		return mailToken;
 		
-		
+	
 		
 	}
 	
+	
+	
+	public void sendConfirmationMail(String token) {
+		
+		JwtTokenUtil tokenUtil = new JwtTokenUtil(mailSecret, tokenDuration);
+		
+		String mailAddress;
+		
+		String mailFromToken = tokenUtil.getUsernameFromToken(token);
+		if(mailTestActive) {
+			mailAddress = mailTestRecipient;
+		}else {
+			
+			mailAddress = mailFromToken;
+		}
+		
+		
+	
+		
+		SimpleMailMessage mail = new SimpleMailMessage();
+		mail.setTo(mailAddress);
+		
+		mail.setSubject("Plase verify your Email");
+		
+		mail.setText("Please folllow this link: \n " + generateConfirmationUrl(token));
+		
+		javaMailSender.send(mail);
+		
+		logger.info("Sending mail to ===>"+mailAddress);
+		logger.info("Receiver  mail  ===>"+mailFromToken);
+		
+		
+	}
 
 	
 	private String generateConfirmationUrl(String token) {
