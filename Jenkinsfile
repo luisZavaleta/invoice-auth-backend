@@ -27,7 +27,7 @@ withPod {
       stage('Test Spring App') {
           container('gradle') {
             sh("chmod +x ./gradlew")
-           // sh("./gradlew test")
+           	sh("./gradlew test")
           }
       }
 

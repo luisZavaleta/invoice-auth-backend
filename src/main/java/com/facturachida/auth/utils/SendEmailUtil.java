@@ -45,7 +45,7 @@ public class SendEmailUtil  implements Serializable {
 	@Value("${mail.server.address}")
 	private String serverAddress;
 
-	@Value("${server.port:8080}")
+	@Value("${mail.server.port:8080}")
     private String serverPort;
 	
 	@Value("${mail.test_recipient}")
