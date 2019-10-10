@@ -12,8 +12,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.facturachida.auth.config.JwtTokenUtil;
-import com.facturachida.auth.data.AuthUser;
 import com.facturachida.auth.service.kafka.VerificationMailConsumerService;
+
+import io.jsonwebtoken.ExpiredJwtException;
 
 
 @Component
@@ -74,8 +75,34 @@ public class SendEmailUtil  implements Serializable {
 		
 		return mailToken;
 		
-	
 		
+	}
+	
+	
+	public String getUsernameFromRequestToken(String requestToken) {
+		
+		JwtTokenUtil tokenUtil = new JwtTokenUtil(mailSecret, tokenDuration);
+		
+		String jwtToken;
+		String username = null;
+		
+		if (requestToken != null && requestToken.startsWith("Bearer_")) {
+			jwtToken = requestToken.substring(7);
+			
+			try {
+				
+				username = tokenUtil.getUsernameFromToken(jwtToken);
+				
+			} catch (IllegalArgumentException e) {
+				System.out.println("Unable to get JWT Token");
+			} catch (ExpiredJwtException e) {
+				System.out.println("JWT Token has expired");
+			}
+		} else {
+			logger.warn("Mail Token does not begin with Bearer String");
+		}
+		
+		return username;
 	}
 	
 	
@@ -87,6 +114,8 @@ public class SendEmailUtil  implements Serializable {
 		String mailAddress;
 		
 		String mailFromToken = tokenUtil.getUsernameFromToken(token);
+		
+		
 		if(mailTestActive) {
 			mailAddress = mailTestRecipient;
 		}else {
@@ -100,9 +129,10 @@ public class SendEmailUtil  implements Serializable {
 		SimpleMailMessage mail = new SimpleMailMessage();
 		mail.setTo(mailAddress);
 		
-		mail.setSubject("Plase verify your Email");
+		mail.setSubject("Facturachida.com is requesting e-mail verification ");
 		
-		mail.setText("Please folllow this link: \n " + generateConfirmationUrl(token));
+		mail.setText("Please validate your email in FacturaChida.com so you can use the app: \n " + generateConfirmationUrl(token));
+		
 		
 		javaMailSender.send(mail);
 		
@@ -115,7 +145,7 @@ public class SendEmailUtil  implements Serializable {
 	
 	private String generateConfirmationUrl(String token) {
 		
-		return serverAddress + ":" + serverPort + "/" + "mailVerification?token=Bearer "+token;
+		return serverAddress + ":" + serverPort + "/" + "mail/validate?token=Bearer_"+token;
 	}
 	
 	

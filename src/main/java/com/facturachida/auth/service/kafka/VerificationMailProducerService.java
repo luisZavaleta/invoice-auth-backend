@@ -10,6 +10,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
+import com.facturachida.auth.repository.UserRepository;
+import com.facturachida.auth.utils.SendEmailUtil;
+
 @Service
 public class VerificationMailProducerService {
 
@@ -20,8 +23,17 @@ public class VerificationMailProducerService {
 	@Value("${mail.token.topic}")
     private String topic;
 	
+	@Value("${mail.token.recieve.topic}")
+	private String receiveTopic;
+	
+	@Autowired 
+	SendEmailUtil sendEmailUtil;
+	
 	@Autowired
 	private KafkaTemplate<String, String> kafkaTemplate;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	public void sendMessage(String token) {
 		
@@ -40,12 +52,23 @@ public class VerificationMailProducerService {
 		        public void onFailure(Throwable ex) {
 		        	logger.error("FAILURES == Sent message=[" + token + "]" + ex.getMessage() );
 		        }
-		    });
+		    });		
 		
+	}
+	
+	
+	public boolean verificateMail(String token) {
 		
+		logger.info("Sending kafka message with topic: " + receiveTopic);
 		
+		String username = sendEmailUtil.getUsernameFromRequestToken(token);
 		
+		if(username != null) {			
+			kafkaTemplate.send(receiveTopic, username);
+			return true;
+		}
 		
+		return false;		
 	}
 	
 	

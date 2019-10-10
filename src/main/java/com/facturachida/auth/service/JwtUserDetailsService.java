@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.facturachida.auth.data.AuthUser;
+import com.facturachida.auth.data.Authuser;
 import com.facturachida.auth.repository.UserRepository;
 
 
@@ -32,7 +32,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		
 
-		AuthUser aUser = userRepository.findByUsername(username);
+		Authuser aUser = userRepository.findByUsername(username);
 
 		if (aUser != null){
 			return new User(aUser.getUsername(), aUser.getPassword(),
@@ -46,12 +46,12 @@ public class JwtUserDetailsService implements UserDetailsService {
 
 
 
-	public AuthUser save(AuthUser user){
+	public Authuser save(Authuser user){
 
-		Consumer<AuthUser> userConsumer = u -> u.setPassword(passwordEncoder.encode(u.getPassword()));
+		Consumer<Authuser> userConsumer = u -> u.setPassword(passwordEncoder.encode(u.getPassword()));
 
 		userConsumer.accept(user);
 	
-		return userRepository.save(user);
+		return userRepository.insert(user);
 	}
 }

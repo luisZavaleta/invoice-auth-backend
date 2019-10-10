@@ -5,6 +5,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -22,8 +23,11 @@ import lombok.Data;
 @Document
 @Validated
 @MatchPasswords(password="password", confirmPassword="confirmPassword")
-public class AuthUser{
+public class Authuser{
 
+	@Id
+	private String id;
+	
 	@UniqueUsername
 	@Indexed(unique = true)
 	@Field("username")

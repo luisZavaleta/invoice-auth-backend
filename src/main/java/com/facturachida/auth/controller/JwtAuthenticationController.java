@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.facturachida.auth.config.JwtTokenUtil;
-import com.facturachida.auth.data.AuthUser;
+import com.facturachida.auth.data.Authuser;
 import com.facturachida.auth.data.JwtRequest;
 import com.facturachida.auth.data.JwtResponse;
 import com.facturachida.auth.service.JwtUserDetailsService;
@@ -70,13 +70,10 @@ public class JwtAuthenticationController {
 	}	
 
 	@RequestMapping(value = "/signin", method = RequestMethod.POST)
-	public ResponseEntity<?> saveUser(@Valid @RequestBody AuthUser user) throws Exception {
+	public ResponseEntity<?> saveUser(@Valid @RequestBody Authuser user) throws Exception {
 		
 		user =  userDetailsService.save(user);		
-		
-		
-		//sendMailUtil.setUser(user);
-		
+
 		user.setPassword("");
 		user.setConfirmPassword("");
 		
@@ -88,17 +85,7 @@ public class JwtAuthenticationController {
 	}
 	
 	
-	@RequestMapping(value = "/mailVerification", method = RequestMethod.GET)
-	public ResponseEntity<?> validateMail(@RequestParam String token) throws Exception {
-		
-		
-		JwtTokenUtil tu = new JwtTokenUtil(mailSecret, tokenDuration);
-		
-		token  = token.substring(7);
-	
-		
-		return ResponseEntity.ok(tu.getUsernameFromToken(token));
-	}
+
 
 
 	private void authenticate(String username, String password) throws Exception {
