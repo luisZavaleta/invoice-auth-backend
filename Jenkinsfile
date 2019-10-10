@@ -37,7 +37,7 @@ withPod {
             sh("./gradlew build")
           }
         
-        sh("docker build -t ${service} --build-arg JAR_FILE=./build/libs/auth-0.0.1-SNAPSHOT.jar .")
+        sh("docker build -t ${service} --build-arg JAR_FILE=./build/libs/auth-0.0.2-SNAPSHOT.jar .")
       }
 
 
