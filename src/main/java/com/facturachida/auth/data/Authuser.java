@@ -38,12 +38,12 @@ public class Authuser{
 	@Field("password")
 	@NotNull
 	@Size(min = 8, message="password whould be at leat 8 characters long")
-	String password;
+	private String password;
 
 	
 	@Transient
 	@Field("confirmPassword")
-	String confirmPassword;
+	private String confirmPassword;
 
 
 	@Field("firstname")

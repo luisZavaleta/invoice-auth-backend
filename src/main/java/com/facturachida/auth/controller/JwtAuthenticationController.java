@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.facturachida.auth.config.JwtTokenUtil;
 import com.facturachida.auth.data.Authuser;
 import com.facturachida.auth.data.JwtRequest;
 import com.facturachida.auth.data.JwtResponse;
+import com.facturachida.auth.data.ReponseUser;
 import com.facturachida.auth.service.JwtUserDetailsService;
 import com.facturachida.auth.service.kafka.VerificationMailProducerService;
 import com.facturachida.auth.utils.SendEmailUtil;
@@ -74,14 +74,20 @@ public class JwtAuthenticationController {
 		
 		user =  userDetailsService.save(user);		
 
-		user.setPassword("");
-		user.setConfirmPassword("");
-		
+
 		verificationMailProducerService.sendMessage(sendMailUtil.getMailToken(userDetailsService.loadUserByUsername(user.getUsername())));
 		
 		
+		ReponseUser ru = new ReponseUser();
 		
-		return ResponseEntity.ok(user);
+		ru.setUsername(user.getUsername());
+		ru.setFirstname(user.getFirstname());
+		ru.setLastname(user.getLastname());
+		ru.setId(user.getId());
+		ru.setActive(user.isActive());
+		ru.setStatus(200);
+		
+		return ResponseEntity.ok(ru);
 	}
 	
 	

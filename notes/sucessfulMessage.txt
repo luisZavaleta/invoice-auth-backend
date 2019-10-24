@@ -1,0 +1,8 @@
+{
+    "id": "5db14550e44048d30a009df5",
+    "username": "luiszava724@gmail.com",
+    "firstname": "",
+    "lastname": "",
+    "active": false,
+    "status": 200
+}

@@ -1,0 +1,76 @@
+{
+    "timestamp": "2019-10-24T06:12:55.596+0000",
+    "status": 400,
+    "error": "Bad Request",
+    "errors": [
+        {
+            "codes": [
+                "MatchPasswords.authuser",
+                "MatchPasswords"
+            ],
+            "arguments": [
+                {
+                    "codes": [
+                        "authuser.",
+                        ""
+                    ],
+                    "arguments": null,
+                    "defaultMessage": "",
+                    "code": ""
+                },
+                {
+                    "defaultMessage": "confirmPassword",
+                    "arguments": null,
+                    "codes": [
+                        "confirmPassword"
+                    ]
+                },
+                {
+                    "defaultMessage": "password",
+                    "arguments": null,
+                    "codes": [
+                        "password"
+                    ]
+                }
+            ],
+            "defaultMessage": "Both passwords should be the same",
+            "objectName": "authuser",
+            "code": "MatchPasswords"
+        },
+        {
+            "codes": [
+                "Email.authuser.username",
+                "Email.username",
+                "Email.java.lang.String",
+                "Email"
+            ],
+            "arguments": [
+                {
+                    "codes": [
+                        "authuser.username",
+                        "username"
+                    ],
+                    "arguments": null,
+                    "defaultMessage": "username",
+                    "code": "username"
+                },
+                [],
+                {
+                    "defaultMessage": ".*",
+                    "arguments": null,
+                    "codes": [
+                        ".*"
+                    ]
+                }
+            ],
+            "defaultMessage": "this field shouls be an e-mail",
+            "objectName": "authuser",
+            "field": "username",
+            "rejectedValue": "luiszava722mail.com",
+            "bindingFailure": false,
+            "code": "Email"
+        }
+    ],
+    "message": "Validation failed for object='authuser'. Error count: 2",
+    "path": "/signin"
+}
