@@ -1,9 +1,6 @@
 package com.facturachida.auth.service.kafka;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
@@ -11,20 +8,18 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.util.concurrent.ListenableFutureCallback;
 
 import com.facturachida.auth.repository.UserRepository;
+import com.facturachida.auth.utils.StaticAttributes;
 import com.facturachida.auth.utils.SendEmailUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Service
 public class VerificationMailProducerService {
 
-	
-	//private static final String TOPIC = "";	
-	private static final Logger logger = LoggerFactory.getLogger(VerificationMailProducerService.class);
-	
-	@Value("${mail.token.topic}")
-    private String topic;
-	
-	@Value("${mail.token.recieve.topic}")
-	private String receiveTopic;
+
+    private String topic = StaticAttributes.MAIL_TOPIC;
+	private String receiveTopic = StaticAttributes.MAIL_RECEIVE_TOPIC;
 	
 	@Autowired 
 	SendEmailUtil sendEmailUtil;
@@ -37,31 +32,29 @@ public class VerificationMailProducerService {
 	
 	public void sendMessage(String token) {
 		
-		logger.info("Sending kafka message with topic: " + topic);
+		log.info("Sending kafka message with topic: " + topic);
 		
 		ListenableFuture<SendResult<String, String>> future =  kafkaTemplate.send(topic, token);
-		
 		
 		 future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 			 
 		        @Override
 		        public void onSuccess(SendResult<String, String> result) {
-		        	logger.info("SUCESSFUL == Sent message=[" + token + "]" );
+		        	log.info("SUCESSFUL == Sent message=[" + token + "]" );
 		        }
 		        @Override
 		        public void onFailure(Throwable ex) {
-		        	logger.error("FAILURES == Sent message=[" + token + "]" + ex.getMessage() );
+		        	log.error("FAILURES == Sent message=[" + token + "]" + ex.getMessage() );
 		        }
-		    });		
-		
+		    });			
 	}
 	
 	
 	public boolean verificateMail(String token) {
 		
-		logger.info("Sending kafka message with topic: " + receiveTopic);
-		
 		String username = sendEmailUtil.getUsernameFromRequestToken(token);
+		
+		log.info("Sending kafka message for mail with topic: " + receiveTopic + " to "+ username);
 		
 		if(username != null) {			
 			kafkaTemplate.send(receiveTopic, username);
@@ -70,7 +63,5 @@ public class VerificationMailProducerService {
 		
 		return false;		
 	}
-	
-	
 	
 }

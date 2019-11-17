@@ -11,18 +11,17 @@ import javax.validation.Payload;
 import com.facturachida.auth.data.validation.MatchPasswordValidator;
 
 @Constraint(validatedBy = MatchPasswordValidator.class)
-
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MatchPasswords {
-	
-	   String message() default
-	      "Both passwords should be the same";
+		
+	   
 	 
 	    Class<?>[] groups() default {};
 	 
 	    Class<? extends Payload>[] payload() default {};
 	    
+	    String message() default "Passwords do not match.";
 	    String password();
 	    String confirmPassword();
 

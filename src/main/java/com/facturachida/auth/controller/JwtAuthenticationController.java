@@ -1,6 +1,5 @@
 package com.facturachida.auth.controller;
 
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,7 +62,7 @@ public class JwtAuthenticationController {
 			final UserDetails userDetails = 
 				userDetailsService.loadUserByUsername(authenticationRequest.getUsername());	
 
-				final String token = jwtTokenUtil.generateToken(  userDetails);		
+				final String token = jwtTokenUtil.generateToken(userDetails);		
 
 				return ResponseEntity.ok(new JwtResponse(token));
 
@@ -91,9 +90,6 @@ public class JwtAuthenticationController {
 	}
 	
 	
-
-
-
 	private void authenticate(String username, String password) throws Exception {
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));

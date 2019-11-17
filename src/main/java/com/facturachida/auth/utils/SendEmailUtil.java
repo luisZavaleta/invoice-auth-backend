@@ -2,8 +2,6 @@ package com.facturachida.auth.utils;
 
 import java.io.Serializable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,32 +10,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import com.facturachida.auth.config.JwtTokenUtil;
-import com.facturachida.auth.service.kafka.VerificationMailConsumerService;
 
 import io.jsonwebtoken.ExpiredJwtException;
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-
+@Slf4j
+@NoArgsConstructor
 @Component
 public class SendEmailUtil  implements Serializable {	
 	
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 8582113458196130542L;
 	
-	//private static final int tokenDuration = 60*60*24*7;
-
-
+	
 	@Autowired
     private JavaMailSender javaMailSender;
 	
-	
 	@Value("${mail.token.duration}")
     private int tokenDuration;
-	
-	
-	//private AuthUser user;
-	
 	
 	@Value("${mail.secret}")
 	private String mailSecret;
@@ -53,29 +44,20 @@ public class SendEmailUtil  implements Serializable {
 	
 	@Value("${mail.test.activated}")
     private Boolean mailTestActive;
+
+	@Value("${mail.email-validation.subject}")
+	private String mailSubject;
 	
-	private static final Logger logger = LoggerFactory.getLogger(VerificationMailConsumerService.class);
-    
- 
+	@Value("${mail.email-validation.text}")
+	private String mailText;
 
 	
-	public SendEmailUtil() {
+	public String getMailToken(UserDetails userDetails) {	
 		
-	}
-	
-	
-
-	
-	public String getMailToken(UserDetails userDetails) {
-		
-		
-		JwtTokenUtil tokenUtil = new JwtTokenUtil(mailSecret, tokenDuration);
-		
+		JwtTokenUtil tokenUtil = new JwtTokenUtil(mailSecret, tokenDuration);	
 		String mailToken = tokenUtil.generateToken(userDetails);
-		
 		return mailToken;
-		
-		
+			
 	}
 	
 	
@@ -89,17 +71,17 @@ public class SendEmailUtil  implements Serializable {
 		if (requestToken != null && requestToken.startsWith("Bearer_")) {
 			jwtToken = requestToken.substring(7);
 			
-			try {
-				
+			try {			
 				username = tokenUtil.getUsernameFromToken(jwtToken);
 				
 			} catch (IllegalArgumentException e) {
-				System.out.println("Unable to get JWT Token");
+				log.error("Unable to get JWT Token  SendEmailUtil::getUsernameFromRequestToken ", e);
+		
 			} catch (ExpiredJwtException e) {
-				System.out.println("JWT Token has expired");
+				log.error("JWT Token has expired  SendEmailUtil::getUsernameFromRequestToken ", e);
 			}
 		} else {
-			logger.warn("Mail Token does not begin with Bearer String");
+			log.warn("Mail Token does not begin with Bearer String");
 		}
 		
 		return username;
@@ -117,37 +99,31 @@ public class SendEmailUtil  implements Serializable {
 		
 		
 		if(mailTestActive) {
+			log.info("Sending mail to test email " + mailTestRecipient + ";  Real mail is:  "+ mailFromToken);
 			mailAddress = mailTestRecipient;
 		}else {
-			
 			mailAddress = mailFromToken;
 		}
 		
 		
-	
-		
 		SimpleMailMessage mail = new SimpleMailMessage();
-		mail.setTo(mailAddress);
 		
-		mail.setSubject("Facturachida.com is requesting e-mail verification ");
-		
-		mail.setText("Please validate your email in FacturaChida.com so you can use the app: \n " + generateConfirmationUrl(token));
+		mail.setTo(mailAddress);	
+		mail.setSubject(mailSubject);	
+		mail.setText(mailText + " \n " + generateConfirmationUrl(token));
 		
 		
 		javaMailSender.send(mail);
 		
-		logger.info("Sending mail to ===>"+mailAddress);
-		logger.info("Receiver  mail  ===>"+mailFromToken);
+		log.info("Sending mail to ===> "+mailAddress);
+		log.info("Actual mail from token  mail  ===> "+mailFromToken);
 		
 		
 	}
 
 	
 	private String generateConfirmationUrl(String token) {
-		
 		return serverAddress + ":" + serverPort + "/" + "mail/validate?token=Bearer_"+token;
 	}
 	
-	
-
 }

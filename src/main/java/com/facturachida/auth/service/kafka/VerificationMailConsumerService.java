@@ -1,7 +1,6 @@
 package com.facturachida.auth.service.kafka;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -9,20 +8,17 @@ import org.springframework.stereotype.Service;
 
 import com.facturachida.auth.data.Authuser;
 import com.facturachida.auth.repository.UserRepository;
+import com.facturachida.auth.utils.StaticAttributes;
 import com.facturachida.auth.utils.SendEmailUtil;
 
+import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
+@NoArgsConstructor
 @Service
 public class VerificationMailConsumerService {
 	
-	@Value("${mail.token.topic}")
-	private static final String TOPIC = "sendverificationmail";
-	
-	
-	@Value("${mail.token.recieve.topic}")
-	private static final String RECEIVE_TOPIC = "recieveverificationmail";
-	
-	private static final Logger logger = LoggerFactory.getLogger(VerificationMailConsumerService.class);
 	
 	@Value("${mail.secret}")
 	String mailSecret;
@@ -38,34 +34,21 @@ public class VerificationMailConsumerService {
 	@Autowired
 	UserRepository userRepository;
 	
-	VerificationMailConsumerService(){
-		
-	}
-	
-	@KafkaListener(topics=TOPIC, groupId="verification_mail")
+
+	@KafkaListener(topics=StaticAttributes.MAIL_TOPIC, groupId=StaticAttributes.MAIL_GROUP_ID)
 	public void consume(String token)  {
-		
-		
 		sendMailUtil.sendConfirmationMail(token);
-	
-		
-		logger.info("=====MAIL SENDED====");
 	}
 	
 	
-	
-	@KafkaListener(topics=RECEIVE_TOPIC, groupId="verification_mail")
+	@KafkaListener(topics=StaticAttributes.MAIL_RECEIVE_TOPIC, groupId=StaticAttributes.MAIL_GROUP_ID)
 	public void activateUser(String username) {
 		
 		Authuser user = userRepository.findByUsername(username);	
-		user.setActive(true);
-		
-		logger.info("USER ID========>"+user.getId());
-		
+		user.setActive(true);		
 		userRepository.save(user);
 		
-		logger.info("=====User with Username ===="+ username + " is active");
-	
+		log.info("=====User with Username ===="+ username + " is now active");
 	}
 
 }

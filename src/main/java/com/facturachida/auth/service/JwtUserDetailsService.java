@@ -19,13 +19,11 @@ import com.facturachida.auth.repository.UserRepository;
 @Service
 public class JwtUserDetailsService implements UserDetailsService {	
 
-
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-
 
 
 	@Override
@@ -40,8 +38,6 @@ public class JwtUserDetailsService implements UserDetailsService {
 		} else {
 			throw new UsernameNotFoundException("User not found with username: " + username);
 		}
-
-
 	}
 
 
@@ -49,8 +45,8 @@ public class JwtUserDetailsService implements UserDetailsService {
 	public Authuser save(Authuser user){
 
 		Consumer<Authuser> userConsumer = u -> u.setPassword(passwordEncoder.encode(u.getPassword()));
-
 		userConsumer.accept(user);
+		
 	
 		return userRepository.insert(user);
 	}

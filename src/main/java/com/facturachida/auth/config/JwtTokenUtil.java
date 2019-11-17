@@ -1,6 +1,5 @@
 package com.facturachida.auth.config;
 
-
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +19,9 @@ import io.jsonwebtoken.SignatureAlgorithm;
 public class JwtTokenUtil implements Serializable {	
 
 	private static final long serialVersionUID = -2550185165626007488L;	
-	private  long tokenValidityInSecond = 5 * 60 * 60;
+	
+	@Value("${jwt.token.validity-in-seconds}")
+	private  long tokenValidityInSecond;
 
 	@Value("${jwt.secret}")
 	private String secret;
@@ -33,14 +34,12 @@ public class JwtTokenUtil implements Serializable {
 		this.tokenValidityInSecond = tokenValidityInSecond;	
 	}
 	
-	
-
 
 	public String getUsernameFromToken(String token) {
 		return getClaimFromToken(token, Claims::getSubject);
 	}
 
-//retrieve expiration date from jwt token
+	//retrieve expiration date from jwt token
 	public Date getExpirationDateFromToken(String token) {
 		return getClaimFromToken(token, Claims::getExpiration);
 	}
@@ -51,7 +50,7 @@ public class JwtTokenUtil implements Serializable {
 	}
 
 
-	 //for retrieveing any information from token we will need the secret key
+	 //for retrieving any information from token we will need the secret key
 	private Claims getAllClaimsFromToken(String token) {
 		return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 	}
@@ -84,7 +83,6 @@ public class JwtTokenUtil implements Serializable {
 			.setExpiration(new Date(System.currentTimeMillis() + tokenValidityInSecond * 1000))
 			.signWith(SignatureAlgorithm.HS512, secret).compact();
 	}
-
 
 
 	//validate token

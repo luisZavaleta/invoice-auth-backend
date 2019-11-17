@@ -15,6 +15,7 @@ import org.springframework.validation.annotation.Validated;
 
 import com.facturachida.auth.data.validation.annotation.MatchPasswords;
 import com.facturachida.auth.data.validation.annotation.UniqueUsername;
+import com.facturachida.auth.utils.StaticAttributes;
 
 import lombok.Data;
 
@@ -22,22 +23,22 @@ import lombok.Data;
 @Data
 @Document
 @Validated
-@MatchPasswords(password="password", confirmPassword="confirmPassword")
+@MatchPasswords(password="password", confirmPassword="confirmPassword", message=StaticAttributes.ERROR_PASSWORD_MATCH_MEESSAGE)
 public class Authuser{
 
 	@Id
 	private String id;
 	
-	@UniqueUsername
+	@UniqueUsername(message=StaticAttributes.ERROR_USERNAME_UNIQUE)
 	@Indexed(unique = true)
 	@Field("username")
-	@Email(message="this field shouls be an e-mail")
+	@Email(message=StaticAttributes.ERROR_EMAIL_MEESSAGE)
 	private  String username;
 
 
 	@Field("password")
 	@NotNull
-	@Size(min = 8, message="password whould be at leat 8 characters long")
+	@Size(min = 8, message=StaticAttributes.ERROR_PASSWORD_MIN_LEN)
 	private String password;
 
 	

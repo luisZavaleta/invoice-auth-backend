@@ -16,7 +16,7 @@ import com.facturachida.auth.data.validation.UniqueUsernameValidator;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UniqueUsername {
 	
-	String message() default "This user already exists";
+	String message() default "This user already exists.";
  
     Class<?>[] groups() default {};
  

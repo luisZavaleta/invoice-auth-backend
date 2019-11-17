@@ -15,9 +15,9 @@
     "description": "A description for 'mail.server.address'"
   },
   {
-    "name": "mail.token.topic",
-    "type": "java.lang.String",
-    "description": "A description for 'mail.token.topic'"
+    "name": "mail.server.port",
+    "type": "java.lang.Integer",
+    "description": "A description for 'mail.server.port"
   },
   {
     "name": "mail.test_recipient",
@@ -30,8 +30,38 @@
     "description": "A description for 'mail.test.activated'"
   },
   {
-    "name": "mail.token.recieve.topic",
+    "name": "jwt.secret",
     "type": "java.lang.String",
-    "description": "A description for 'mail.token.recieve.topic'"
+    "description": "A description for 'jwt.secret'"
+  },
+  {
+    "name": "jwt.token.validityInSeconds",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.token.validityInSeconds'"
+  },
+  {
+    "name": "jwt.token.validityInSeconds",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.token.validityInSeconds'"
+  },
+  {
+    "name": "jwt.token.validityInSeconds",
+    "type": "java.lang.String",
+    "description": "A description for 'jwt.token.validityInSeconds'"
+  },
+  {
+    "name": "jwt.token.validity-in-seconds",
+    "type": "java.lang.Integer",
+    "description": "A description for 'jwt.token.validityInSeconds'"
+  },
+  {
+    "name": "mail.email-validation.subject",
+    "type": "java.lang.String",
+    "description": "A description for 'mail.email-validation.subject'"
+  },
+  {
+    "name": "mail.email-validation.text",
+    "type": "java.lang.String",
+    "description": "A description for 'mail.email-validation.text'"
   }
 ]}

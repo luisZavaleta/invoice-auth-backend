@@ -7,6 +7,5 @@ import com.facturachida.auth.data.Authuser;
 public interface UserRepository  extends MongoRepository<Authuser, Long>{
 	
 		public Authuser findByUsername(String username);
-		
 	
 }

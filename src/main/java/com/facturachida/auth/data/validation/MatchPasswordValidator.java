@@ -10,11 +10,13 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import com.facturachida.auth.data.validation.annotation.MatchPasswords;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class MatchPasswordValidator implements ConstraintValidator<MatchPasswords, Object> {
 
 	 private String password;
 	 private String confirmPassword;
-	 
 	 
 	 @Override
 	 public void initialize(final MatchPasswords constraintAnnotation) {
@@ -22,10 +24,8 @@ public class MatchPasswordValidator implements ConstraintValidator<MatchPassword
 		 confirmPassword = constraintAnnotation.confirmPassword();
 	 }
 	
-	
 	@Override
 	public boolean isValid(Object obj, ConstraintValidatorContext context) {
-		
 		
 		 try {
 			String pwd = BeanUtils.getProperty(obj, password);
@@ -33,15 +33,12 @@ public class MatchPasswordValidator implements ConstraintValidator<MatchPassword
 			
 			return pwd != null  && Objects.equals(pwd, confPwd);
 			
-			
 		} catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("error on MatchPasswordValidator::isValid, ", e);
+			
 		}
 
-		return false;
-		
-		 
+		return false; 
 	}
 
 }

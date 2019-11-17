@@ -1,6 +1,5 @@
 package com.facturachida.auth.config;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -56,7 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 		// dont authenticate this particular request
-			.authorizeRequests().antMatchers("/authenticate", "/signin", "/producer", "/kafka/publish", "/mail/validate").permitAll().
+			.authorizeRequests().antMatchers("/authenticate", "/signin", "/mail/validate").permitAll().
 				// all other requests need to be authenticated
 			anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to
