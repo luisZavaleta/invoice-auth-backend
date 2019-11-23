@@ -1,9 +1,14 @@
 package com.facturachida.auth.controller;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -19,7 +24,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.facturachida.auth.config.JwtTokenUtil;
 import com.facturachida.auth.data.Authuser;
 import com.facturachida.auth.data.JwtRequest;
-import com.facturachida.auth.data.JwtResponse;
 import com.facturachida.auth.data.ReponseUser;
 import com.facturachida.auth.service.JwtUserDetailsService;
 import com.facturachida.auth.service.kafka.VerificationMailProducerService;
@@ -56,15 +60,36 @@ public class JwtAuthenticationController {
 
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) throws Exception {
+		
+		
+		try {	
+			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword()));
+		} catch (DisabledException e) {
 			
-			authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());	
+			Map<String, Object> reponseBody = new HashMap<String, Object>();
+			
+			reponseBody.put("timestamp", LocalDateTime.now());
+			reponseBody.put("status", 417);
+			reponseBody.put("error", "Unauthorized");
+			reponseBody.put("message", "Account had not been validated.");
+			reponseBody.put("path", "/authenticate");
+			
+			return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(reponseBody);
+		
+		} catch (BadCredentialsException e) {
+			throw new Exception("INVALID_CREDENTIALS", e);
+		} 
+				
+		
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());	
 
-			final UserDetails userDetails = 
-				userDetailsService.loadUserByUsername(authenticationRequest.getUsername());	
+		final String token = jwtTokenUtil.generateToken(userDetails);	
+			
+		Map<String, Object> reponseBody = new HashMap<String, Object>();
+		reponseBody.put("status", 200);
+		reponseBody.put("token", token);
 
-				final String token = jwtTokenUtil.generateToken(userDetails);		
-
-				return ResponseEntity.ok(new JwtResponse(token));
+		return ResponseEntity.ok(reponseBody);
 
 	}	
 
@@ -72,8 +97,6 @@ public class JwtAuthenticationController {
 	public ResponseEntity<?> saveUser(@Valid @RequestBody Authuser user) throws Exception {
 		
 		user =  userDetailsService.save(user);		
-
-
 		verificationMailProducerService.sendMessage(sendMailUtil.getMailToken(userDetailsService.loadUserByUsername(user.getUsername())));
 		
 		
@@ -89,14 +112,4 @@ public class JwtAuthenticationController {
 		return ResponseEntity.ok(ru);
 	}
 	
-	
-	private void authenticate(String username, String password) throws Exception {
-		try {
-			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-		} catch (DisabledException e) {
-			throw new Exception("USER_DISABLED", e);
-		} catch (BadCredentialsException e) {
-			throw new Exception("INVALID_CREDENTIALS", e);
-		}
-	}
 }

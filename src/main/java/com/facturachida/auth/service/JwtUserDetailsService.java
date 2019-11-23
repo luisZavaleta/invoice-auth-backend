@@ -15,8 +15,11 @@ import org.springframework.stereotype.Service;
 import com.facturachida.auth.data.Authuser;
 import com.facturachida.auth.repository.UserRepository;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 @Service
+@Slf4j
 public class JwtUserDetailsService implements UserDetailsService {	
 
 	@Autowired
@@ -33,8 +36,15 @@ public class JwtUserDetailsService implements UserDetailsService {
 		Authuser aUser = userRepository.findByUsername(username);
 
 		if (aUser != null){
-			return new User(aUser.getUsername(), aUser.getPassword(),
-					new ArrayList<>());
+			
+			
+			log.info("Is user Active: ==>>  "+ aUser.isActive());
+			
+			User user = new User(aUser.getUsername(), aUser.getPassword(), aUser.isActive(), true, true, true, new ArrayList<>());
+			
+			log.info("Is user Enabled: ==>>  "+ user.isEnabled());
+		
+			return user;
 		} else {
 			throw new UsernameNotFoundException("User not found with username: " + username);
 		}
