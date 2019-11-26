@@ -15,11 +15,8 @@ import org.springframework.stereotype.Service;
 import com.facturachida.auth.data.Authuser;
 import com.facturachida.auth.repository.UserRepository;
 
-import lombok.extern.slf4j.Slf4j;
-
 
 @Service
-@Slf4j
 public class JwtUserDetailsService implements UserDetailsService {	
 
 	@Autowired
@@ -37,12 +34,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
 		if (aUser != null){
 			
-			
-			log.info("Is user Active: ==>>  "+ aUser.isActive());
-			
 			User user = new User(aUser.getUsername(), aUser.getPassword(), aUser.isActive(), true, true, true, new ArrayList<>());
-			
-			log.info("Is user Enabled: ==>>  "+ user.isEnabled());
 		
 			return user;
 		} else {

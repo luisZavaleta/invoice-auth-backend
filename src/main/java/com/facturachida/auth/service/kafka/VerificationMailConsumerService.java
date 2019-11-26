@@ -50,5 +50,12 @@ public class VerificationMailConsumerService {
 		
 		log.info("=====User with Username ===="+ username + " is now active");
 	}
+	
+	
+	@KafkaListener(topics=StaticAttributes.SEND_MAIL_TO_RESET_PASSWORD_TOPIC, groupId=StaticAttributes.MAIL_GROUP_ID)
+	public void sendMailToResetPasswordConsumer(String token)  {
+		sendMailUtil.sendConfirmationMailToResetPassword(token);
+	}
+	
 
 }

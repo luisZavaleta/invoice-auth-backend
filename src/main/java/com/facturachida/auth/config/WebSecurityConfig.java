@@ -52,10 +52,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
+		
+		
+		 String[] autPaths = new String[]{
+					 "/authenticate", 
+					 "/signin", 
+					 "/mail/validate", 
+					 "/changemail",
+					 "/mail/resetpassword"
+				 };
+		
+		
 		// We don't need CSRF for this example
 		httpSecurity.csrf().disable()
 		// dont authenticate this particular request
-			.authorizeRequests().antMatchers("/authenticate", "/signin", "/mail/validate").permitAll().
+			.authorizeRequests().antMatchers(autPaths).permitAll().
 				// all other requests need to be authenticated
 			anyRequest().authenticated().and().
 				// make sure we use stateless session; session won't be used to

@@ -16,6 +16,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -110,6 +111,28 @@ public class JwtAuthenticationController {
 		ru.setStatus(200);
 		
 		return ResponseEntity.ok(ru);
+	}
+	
+	
+	@PostMapping(value="/changemail")
+	public ResponseEntity<?> changeMail(@RequestBody Map<String,Object> body) throws Exception {
+			
+		String userName = body.get("username").toString();
+		
+		UserDetails userDetails  = userDetailsService.loadUserByUsername(userName);
+		
+		verificationMailProducerService.sendMailToResetPasswordProducer(sendMailUtil.getMailToken(userDetails));
+		
+		
+		Map<String, Object> mapResponse = new HashMap<String, Object> ();
+		
+		mapResponse.put("status", 200);
+		mapResponse.put("enable", userDetails.isEnabled());
+		mapResponse.put("username", userDetails.getUsername());
+		
+		
+		return ResponseEntity.ok(mapResponse);
+		
 	}
 	
 }

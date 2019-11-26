@@ -50,6 +50,8 @@ public class VerificationMailProducerService {
 	}
 	
 	
+	
+	
 	public boolean verificateMail(String token) {
 		
 		String username = sendEmailUtil.getUsernameFromRequestToken(token);
@@ -62,6 +64,31 @@ public class VerificationMailProducerService {
 		}
 		
 		return false;		
+	}
+	
+	
+	
+	
+	
+
+	public void sendMailToResetPasswordProducer(String token) {
+		
+		log.info("Sending kafka message with topic: " + topic);
+		
+		ListenableFuture<SendResult<String, String>> future =  kafkaTemplate.send(StaticAttributes.SEND_MAIL_TO_RESET_PASSWORD_TOPIC, token);
+		
+		
+		 future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
+			 
+		        @Override
+		        public void onSuccess(SendResult<String, String> result) {
+		        	log.info("SUCESSFUL == Sent message to reset password =[" + token + "]" );
+		        }
+		        @Override
+		        public void onFailure(Throwable ex) {
+		        	log.error("FAILURES == Sent message to reset password =[" + token + "]" + ex.getMessage() );
+		        }
+		    });			
 	}
 	
 }

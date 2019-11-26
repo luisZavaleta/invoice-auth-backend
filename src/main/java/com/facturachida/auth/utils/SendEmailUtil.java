@@ -89,6 +89,11 @@ public class SendEmailUtil  implements Serializable {
 	
 	
 	
+	
+	
+	
+	
+	
 	public void sendConfirmationMail(String token) {
 		
 		JwtTokenUtil tokenUtil = new JwtTokenUtil(mailSecret, tokenDuration);
@@ -110,7 +115,7 @@ public class SendEmailUtil  implements Serializable {
 		
 		mail.setTo(mailAddress);	
 		mail.setSubject(mailSubject);	
-		mail.setText(mailText + " \n " + generateConfirmationUrl(token));
+		mail.setText(mailText + " \n " + generateConfirmationUrl(token, "/mail/validate"));
 		
 		
 		javaMailSender.send(mail);
@@ -120,10 +125,48 @@ public class SendEmailUtil  implements Serializable {
 		
 		
 	}
+	
+	
+	
+	
+	public void sendConfirmationMailToResetPassword(String token) {
+		
+		final String  mailSubject = "Reset your FacturaChida.com password";
+		final String  mailBody = "Please follow the next link to reset your password";
+		
+		JwtTokenUtil tokenUtil = new JwtTokenUtil(mailSecret, tokenDuration);
+		
+		String mailAddress;
+		
+		String mailFromToken = tokenUtil.getUsernameFromToken(token);
+		
+		
+		if(mailTestActive) {
+			log.info("Sending mail to test email " + mailTestRecipient + ";  Real mail is:  "+ mailFromToken);
+			mailAddress = mailTestRecipient;
+		}else {
+			mailAddress = mailFromToken;
+		}
+		
+		
+		SimpleMailMessage mail = new SimpleMailMessage();
+		
+		mail.setTo(mailAddress);	
+		mail.setSubject(mailSubject);	
+		mail.setText(mailBody + " \n " + generateConfirmationUrl(token, "/mail/resetpassword"));
+		
+		
+		javaMailSender.send(mail);
+		
+		log.info("Sending reset pwd mail to ===> "+mailAddress);
+		log.info("Actual mail from token  mail  ===> "+mailFromToken);
+		
+		
+	}
 
 	
-	private String generateConfirmationUrl(String token) {
-		return serverAddress + ":" + serverPort + "/" + "mail/validate?token=Bearer_"+token;
+	private String generateConfirmationUrl(String token, String path) {
+		return serverAddress + ":" + serverPort + path + "?token=Bearer_"+token;
 	}
 	
 }

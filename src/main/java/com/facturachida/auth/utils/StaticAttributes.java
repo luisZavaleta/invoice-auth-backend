@@ -5,6 +5,7 @@ public class StaticAttributes {
 	public static final String MAIL_TOPIC = "sendverificationmail";
 	public static final String MAIL_RECEIVE_TOPIC = "recieveverificationmail";
 	public static final String MAIL_GROUP_ID = "verification_mail";
+	public static final String SEND_MAIL_TO_RESET_PASSWORD_TOPIC = "mail-to-reset-password-topic";
 	
 	
 	public static final String ERROR_EMAIL_MEESSAGE = "You must enter a valid e-mail address.";
