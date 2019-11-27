@@ -50,6 +50,16 @@ public class SendEmailUtil  implements Serializable {
 	
 	@Value("${mail.email-validation.text}")
 	private String mailText;
+	
+	@Value("${mail.frontend.host}")
+	private String frontEndHost;
+	
+	@Value("${mail.frontend.port}")
+	private String frontEndPort;
+	
+	
+	
+
 
 	
 	public String getMailToken(UserDetails userDetails) {	
@@ -153,7 +163,7 @@ public class SendEmailUtil  implements Serializable {
 		
 		mail.setTo(mailAddress);	
 		mail.setSubject(mailSubject);	
-		mail.setText(mailBody + " \n " + generateConfirmationUrl(token, "/mail/resetpassword"));
+		mail.setText(mailBody + " \n " + generateResetMailUrl(token, mailFromToken));
 		
 		
 		javaMailSender.send(mail);
@@ -167,6 +177,10 @@ public class SendEmailUtil  implements Serializable {
 	
 	private String generateConfirmationUrl(String token, String path) {
 		return serverAddress + ":" + serverPort + path + "?token=Bearer_"+token;
+	}
+	
+	private String generateResetMailUrl(String token, String username) {
+		return frontEndHost + ":" + frontEndPort + "/changepassword/"+token+"/"+username;
 	}
 	
 }
