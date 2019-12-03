@@ -2,6 +2,7 @@ package com.facturachida.auth.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.validation.Valid;
 
@@ -21,7 +22,7 @@ import com.facturachida.auth.data.ResetPasswordRequest;
 import com.facturachida.auth.repository.UserRepository;
 import com.facturachida.auth.service.kafka.VerificationMailProducerService;
 import com.facturachida.auth.utils.MailTokenUtil;
-import com.facturachida.auth.utils.SendEmailUtil;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 
 @RestController
@@ -32,22 +33,22 @@ public class VerificateController {
 	
 
 	private final VerificationMailProducerService verificationMailProducerService;
-	private final SendEmailUtil sendEmailUtil;	
 	private final MailTokenUtil mailTokenUtil;
 	private final UserRepository userRepository;
+	private final PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	public VerificateController(
 				VerificationMailProducerService verificationMailProducerService, 
-				SendEmailUtil sendEmailUtil,
 				MailTokenUtil mailTokenUtil,
-				UserRepository userRepository
+				UserRepository userRepository,
+				PasswordEncoder passwordEncoder
 			) 
 	{
 		this.verificationMailProducerService = verificationMailProducerService;
-		this.sendEmailUtil = sendEmailUtil;
 		this.mailTokenUtil = mailTokenUtil;
 		this.userRepository = userRepository;
+		this.passwordEncoder = passwordEncoder;
 		
 		
 	}
@@ -78,8 +79,16 @@ public class VerificateController {
 		
 		Authuser user = null;
 		if(username != null ) {
+			
 			user = userRepository.findByUsername(username);
 			user.setPassword(resetPasswordRequest.getPassword());
+			
+			
+			Consumer<Authuser> userConsumer = u -> u.setPassword(passwordEncoder.encode(u.getPassword()));
+			userConsumer.accept(user);
+			
+			
+			
 			userRepository.save(user);
 		}
 		
