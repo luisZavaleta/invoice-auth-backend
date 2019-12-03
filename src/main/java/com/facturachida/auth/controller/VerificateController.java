@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.facturachida.auth.data.Authuser;
+import com.facturachida.auth.data.ReponseUser;
 import com.facturachida.auth.data.ResetPasswordRequest;
 import com.facturachida.auth.repository.UserRepository;
 import com.facturachida.auth.service.kafka.VerificationMailProducerService;
@@ -83,6 +84,12 @@ public class VerificateController {
 		}
 		
 		
-		return  ResponseEntity.ok(user);
+		ReponseUser responseUser = new ReponseUser();
+		
+		responseUser.setStatus(200);
+		responseUser.setUsername(user.getUsername());
+		responseUser.setActive(user.isActive());
+		
+		return  ResponseEntity.ok(responseUser);
 	} 
 }

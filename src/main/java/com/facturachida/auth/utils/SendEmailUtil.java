@@ -180,7 +180,7 @@ public class SendEmailUtil  implements Serializable {
 	}
 	
 	private String generateResetMailUrl(String token, String username) {
-		return frontEndHost + ":" + frontEndPort + "/changepassword/"+token+"/"+username;
+		return frontEndHost + ":" + frontEndPort + "/changepassword/Bearer_"+token+"/"+username;
 	}
 	
 }
