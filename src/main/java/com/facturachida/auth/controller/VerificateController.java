@@ -7,7 +7,9 @@ import java.util.function.Consumer;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,9 +22,10 @@ import com.facturachida.auth.data.Authuser;
 import com.facturachida.auth.data.ReponseUser;
 import com.facturachida.auth.data.ResetPasswordRequest;
 import com.facturachida.auth.repository.UserRepository;
+import com.facturachida.auth.service.JwtUserDetailsService;
 import com.facturachida.auth.service.kafka.VerificationMailProducerService;
 import com.facturachida.auth.utils.MailTokenUtil;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import com.facturachida.auth.utils.SendEmailUtil;
 
 
 @RestController
@@ -36,19 +39,25 @@ public class VerificateController {
 	private final MailTokenUtil mailTokenUtil;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final SendEmailUtil sendMailUtil;
+	private final JwtUserDetailsService userDetailsService;
 	
 	@Autowired
 	public VerificateController(
 				VerificationMailProducerService verificationMailProducerService, 
 				MailTokenUtil mailTokenUtil,
 				UserRepository userRepository,
-				PasswordEncoder passwordEncoder
+				PasswordEncoder passwordEncoder,
+				SendEmailUtil sendMailUtil,
+				JwtUserDetailsService userDetailsService
 			) 
 	{
 		this.verificationMailProducerService = verificationMailProducerService;
 		this.mailTokenUtil = mailTokenUtil;
 		this.userRepository = userRepository;
 		this.passwordEncoder = passwordEncoder;
+		this.sendMailUtil = sendMailUtil;
+		this.userDetailsService = userDetailsService;
 		
 		
 	}
@@ -63,8 +72,6 @@ public class VerificateController {
 		
 		if(verificationMailProducerService.verificateMail(token)) {
 			validateResponse.put("status", "validated");
-		}else {
-			validateResponse.put("status", "error");
 		}
 		
 		return validateResponse;
@@ -101,4 +108,22 @@ public class VerificateController {
 		
 		return  ResponseEntity.ok(responseUser);
 	} 
+	
+	
+	
+	@PostMapping(value="/resendverification")
+	public ResponseEntity<?> resendValidationMail(@RequestBody Map<String,Object> body) {
+		
+		Authuser user = userRepository.findByUsername(body.get("username").toString());
+		
+		if(user == null) {
+			return new ResponseEntity<String>("Username not found",HttpStatus.UNPROCESSABLE_ENTITY);
+		}
+		
+		verificationMailProducerService.sendMessage(sendMailUtil.getMailToken(userDetailsService.loadUserByUsername(user.getUsername())));
+		
+		return ResponseEntity.ok("Mail sended");
+		
+	}
+	
 }

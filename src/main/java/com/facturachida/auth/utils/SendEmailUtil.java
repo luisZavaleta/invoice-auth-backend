@@ -98,12 +98,6 @@ public class SendEmailUtil  implements Serializable {
 	}
 	
 	
-	
-	
-	
-	
-	
-	
 	public void sendConfirmationMail(String token) {
 		
 		JwtTokenUtil tokenUtil = new JwtTokenUtil(mailSecret, tokenDuration);
@@ -125,7 +119,7 @@ public class SendEmailUtil  implements Serializable {
 		
 		mail.setTo(mailAddress);	
 		mail.setSubject(mailSubject);	
-		mail.setText(mailText + " \n " + generateConfirmationUrl(token, "/mail/validate"));
+		mail.setText(mailText + " \n " + generateConfirmationUrl(token, "/validateMail"));
 		
 		
 		javaMailSender.send(mail);
@@ -176,7 +170,7 @@ public class SendEmailUtil  implements Serializable {
 
 	
 	private String generateConfirmationUrl(String token, String path) {
-		return serverAddress + ":" + serverPort + path + "?token=Bearer_"+token;
+		return frontEndHost + ":" + frontEndPort + path + "/Bearer_"+token;
 	}
 	
 	private String generateResetMailUrl(String token, String username) {

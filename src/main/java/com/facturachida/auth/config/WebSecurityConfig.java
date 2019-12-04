@@ -59,7 +59,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 					 "/signin", 
 					 "/mail/validate", 
 					 "/changemail",
-					 "/mail/resetpassword"
+					 "/mail/resetpassword",
+					 "/mail/resendverification"
 				 };
 		
 		
