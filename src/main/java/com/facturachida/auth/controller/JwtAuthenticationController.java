@@ -121,8 +121,9 @@ public class JwtAuthenticationController {
 		
 		UserDetails userDetails  = userDetailsService.loadUserByUsername(userName);
 		
-		verificationMailProducerService.sendMailToResetPasswordProducer(sendMailUtil.getMailToken(userDetails));
-		
+		if(userDetails.isEnabled()) {
+			verificationMailProducerService.sendMailToResetPasswordProducer(sendMailUtil.getMailToken(userDetails));
+		}
 		
 		Map<String, Object> mapResponse = new HashMap<String, Object> ();
 		
