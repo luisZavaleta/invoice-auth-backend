@@ -48,7 +48,7 @@ public class VerificationMailConsumerService {
 		user.setActive(true);		
 		userRepository.save(user);
 		
-		log.info("=====User with Username ===="+ username + " is now active");
+		log.info("VerificationMailConsumerService::activateUser  "+ username + " is now active");
 	}
 	
 	
@@ -56,6 +56,5 @@ public class VerificationMailConsumerService {
 	public void sendMailToResetPasswordConsumer(String token)  {
 		sendMailUtil.sendConfirmationMailToResetPassword(token);
 	}
-	
 
 }

@@ -58,8 +58,6 @@ public class VerificateController {
 		this.passwordEncoder = passwordEncoder;
 		this.sendMailUtil = sendMailUtil;
 		this.userDetailsService = userDetailsService;
-		
-		
 	}
 	
 	
@@ -68,7 +66,6 @@ public class VerificateController {
 	public Map<String, String> validateMail(@RequestParam("token") String  token) {
 		
 		Map<String, String> validateResponse = new HashMap<String, String>();
-		
 		
 		if(verificationMailProducerService.verificateMail(token)) {
 			validateResponse.put("status", "validated");
@@ -90,15 +87,11 @@ public class VerificateController {
 			user = userRepository.findByUsername(username);
 			user.setPassword(resetPasswordRequest.getPassword());
 			
-			
 			Consumer<Authuser> userConsumer = u -> u.setPassword(passwordEncoder.encode(u.getPassword()));
 			userConsumer.accept(user);
 			
-			
-			
 			userRepository.save(user);
 		}
-		
 		
 		ReponseUser responseUser = new ReponseUser();
 		
@@ -119,7 +112,7 @@ public class VerificateController {
 		if(user == null) {
 			return new ResponseEntity<String>("Username not found",HttpStatus.UNPROCESSABLE_ENTITY);
 		}
-		
+	
 		verificationMailProducerService.sendMessage(sendMailUtil.getMailToken(userDetailsService.loadUserByUsername(user.getUsername())));
 		
 		return ResponseEntity.ok("Mail sended");

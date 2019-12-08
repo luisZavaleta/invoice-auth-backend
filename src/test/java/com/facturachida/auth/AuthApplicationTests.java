@@ -53,20 +53,16 @@ public class AuthApplicationTests {
             mongodExecutable = starter.prepare(mongodConfig);
             mongoProcess = mongodExecutable.start();
             mongo = new MongoClient(LOCALHOST, MONGO_TEST_PORT);
-           DB db = mongo.getDB(DB_NAME);
+            DB db = mongo.getDB(DB_NAME);
           
            
-           
-           Map<String, Object> commandArguments = new BasicDBObject();
-           commandArguments.put("createUser", USER_NAME);
-           commandArguments.put("pwd", USER_PWD);
-           String[] roles = { "readWrite" , "dbAdmin",  "userAdmin"};
-           commandArguments.put("roles", roles);
-           BasicDBObject command = new BasicDBObject(commandArguments);
-           db.command(command);
-           
-           
-           
+            Map<String, Object> commandArguments = new BasicDBObject();
+            commandArguments.put("createUser", USER_NAME);
+            commandArguments.put("pwd", USER_PWD);
+            String[] roles = { "readWrite" , "dbAdmin",  "userAdmin"};
+            commandArguments.put("roles", roles);
+            BasicDBObject command = new BasicDBObject(commandArguments);
+            db.command(command);
            
         } finally {
             if (mongodExecutable != null)

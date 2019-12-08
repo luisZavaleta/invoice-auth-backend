@@ -18,29 +18,19 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class MailTokenUtil {
 	
-	
-	
-
-	JwtTokenUtil tokenUtil;
-	
+	JwtTokenUtil tokenUtil;	
 	JwtUserDetailsService jwtUserDetailsService;
 	
-	
-	
-	
+
 	@Autowired
 	MailTokenUtil(
 			JwtUserDetailsService jwtUserDetailsService,
 			@Value("${mail.token.duration}") int tokenDuration,
 			@Value("${mail.secret}") String mailSecret
 			
-			){
-		
-		log.info("mailSecret====>"+mailSecret);
-		log.info("tokenDuration====>"+tokenDuration);
+			)
+	{
 		this.tokenUtil = new JwtTokenUtil(mailSecret, tokenDuration);
-	
-		
 		this.jwtUserDetailsService = jwtUserDetailsService;
 	}
 	
@@ -54,7 +44,6 @@ public class MailTokenUtil {
 	}
 	
 	
-	
 	public boolean isValidToken(String bearerToken) {
 		
 		try {
@@ -63,8 +52,8 @@ public class MailTokenUtil {
 			
 			UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(username);
 			
-			
 			return tokenUtil.validateToken(jwtToken, userDetails);	
+		
 		}catch (IllegalArgumentException e) {
 			log.error("Unable to get JWT Token");
 		} catch (ExpiredJwtException e) {
@@ -94,8 +83,8 @@ public boolean isValidToken(String username, String jwtToken) {
 	
 	
 /*
- * 
- * @return username if the token is valid, null if it is not.
+ 
+  @return username if the token is valid, null if it is not.
  * */
 	public String getValidUsernameFromBearerToken(String bearerToken) {
 		
@@ -108,43 +97,6 @@ public boolean isValidToken(String username, String jwtToken) {
 		}else {
 			return null;
 		}	
-		
 	}
-	
-	
-	
-	
-	
-	/*
-	
-	 
-	 
-	 // JWT Token is in the form "Bearer token". Remove Bearer word and get
-		// only the Token
-		if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer ")) {
-			jwtToken = requestTokenHeader.substring(7);
-			try {
-				username = jwtTokenUtil.getUsernameFromToken(jwtToken);
-			} catch (IllegalArgumentException e) {
-				logger.error("Unable to get JWT Token");
-			} catch (ExpiredJwtException e) {
-				logger.error("JWT Token has expired");
-			}
-		} else {
-			logger.warn("JWT Token does not begin with Bearer String.");
-		}
-	 
-	 
-	 
-	 * */
-	
-	
-	/*
-	public Boolean validateToken(String token, UserDetails userDetails) {
-		final String username = getUsernameFromToken(token);
-		return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
-	}
-	
-	*/
 	
 }

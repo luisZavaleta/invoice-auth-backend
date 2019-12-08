@@ -32,7 +32,7 @@ public class VerificationMailProducerService {
 	
 	public void sendMessage(String token) {
 		
-		log.info("Sending kafka message with topic: " + topic);
+		log.info("VerificationMailProducerService::sendMessage Sending kafka message with topic: " + topic);
 		
 		ListenableFuture<SendResult<String, String>> future =  kafkaTemplate.send(topic, token);
 		
@@ -51,12 +51,11 @@ public class VerificationMailProducerService {
 	
 	
 	
-	
 	public boolean verificateMail(String token) {
 		
 		String username = sendEmailUtil.getUsernameFromRequestToken(token);
 		
-		log.info("Sending kafka message for mail with topic: " + receiveTopic + " to "+ username);
+		log.info("VerificationMailProducerService::verificateMail Sending kafka message for mail with topic: " + receiveTopic + " to "+ username);
 		
 		if(username != null) {			
 			kafkaTemplate.send(receiveTopic, username);
@@ -67,13 +66,10 @@ public class VerificationMailProducerService {
 	}
 	
 	
-	
-	
-	
 
 	public void sendMailToResetPasswordProducer(String token) {
 		
-		log.info("Sending kafka message with topic: " + topic);
+		log.info("VerificationMailProducerService::sendMailToResetPasswordProducer Sending kafka message with topic: " + topic);
 		
 		ListenableFuture<SendResult<String, String>> future =  kafkaTemplate.send(StaticAttributes.SEND_MAIL_TO_RESET_PASSWORD_TOPIC, token);
 		
@@ -82,11 +78,13 @@ public class VerificationMailProducerService {
 			 
 		        @Override
 		        public void onSuccess(SendResult<String, String> result) {
-		        	log.info("SUCESSFUL == Sent message to reset password =[" + token + "]" );
+		        	log.info("VerificationMailProducerService::sendMailToResetPasswordProducer sucessfully sent message "
+		        			+ "to reset password  [" + token + "]" );
 		        }
 		        @Override
 		        public void onFailure(Throwable ex) {
-		        	log.error("FAILURES == Sent message to reset password =[" + token + "]" + ex.getMessage() );
+		        	log.error("VerificationMailProducerService::sendMailToResetPasswordProducer fail while sending  "
+		        			+ "message to reset password =[" + token + "]" + ex.getMessage() );
 		        }
 		    });			
 	}

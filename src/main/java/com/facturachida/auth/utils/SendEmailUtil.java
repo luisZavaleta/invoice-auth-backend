@@ -56,10 +56,6 @@ public class SendEmailUtil  implements Serializable {
 	
 	@Value("${mail.frontend.port}")
 	private String frontEndPort;
-	
-	
-	
-
 
 	
 	public String getMailToken(UserDetails userDetails) {	
@@ -108,7 +104,7 @@ public class SendEmailUtil  implements Serializable {
 		
 		
 		if(mailTestActive) {
-			log.info("Sending mail to test email " + mailTestRecipient + ";  Real mail is:  "+ mailFromToken);
+			log.info("SendEmailUtil::sendConfirmationMail Sending mail to test email " + mailTestRecipient + ";  Real mail is:  "+ mailFromToken);
 			mailAddress = mailTestRecipient;
 		}else {
 			mailAddress = mailFromToken;
@@ -123,10 +119,6 @@ public class SendEmailUtil  implements Serializable {
 		
 		
 		javaMailSender.send(mail);
-		
-		log.info("Sending mail to ===> "+mailAddress);
-		log.info("Actual mail from token  mail  ===> "+mailFromToken);
-		
 		
 	}
 	
@@ -146,7 +138,8 @@ public class SendEmailUtil  implements Serializable {
 		
 		
 		if(mailTestActive) {
-			log.info("Sending mail to test email " + mailTestRecipient + ";  Real mail is:  "+ mailFromToken);
+			log.info("SendEmailUtil::sendConfirmationMailToResetPassword Sending mail to test email " 
+						+ mailTestRecipient + ";  Real mail is:  "+ mailFromToken);
 			mailAddress = mailTestRecipient;
 		}else {
 			mailAddress = mailFromToken;
@@ -159,13 +152,8 @@ public class SendEmailUtil  implements Serializable {
 		mail.setSubject(mailSubject);	
 		mail.setText(mailBody + " \n " + generateResetMailUrl(token, mailFromToken));
 		
-		
 		javaMailSender.send(mail);
-		
-		log.info("Sending reset pwd mail to ===> "+mailAddress);
-		log.info("Actual mail from token  mail  ===> "+mailFromToken);
-		
-		
+	
 	}
 
 	
